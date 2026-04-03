@@ -21,7 +21,7 @@ jobs:
         run: echo "tag=bundle-$(date -u +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
 
       - name: Build tarball
-        run: tar -czf bundle.tar.gz --exclude='.git' --exclude='bundle.tar.gz' .
+        run: tar -czf /tmp/bundle.tar.gz --exclude='.git' . && mv /tmp/bundle.tar.gz bundle.tar.gz
 
       - name: Create release
         uses: softprops/action-gh-release@v2
