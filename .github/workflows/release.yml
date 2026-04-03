@@ -1,0 +1,31 @@
+name: Release Bundle
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set release tag
+        id: tag
+        run: echo "tag=bundle-$(date -u +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Build tarball
+        run: tar -czf bundle.tar.gz --exclude='.git' --exclude='bundle.tar.gz' .
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: Bundle ${{ steps.tag.outputs.tag }}
+          files: bundle.tar.gz
